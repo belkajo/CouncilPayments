@@ -2,7 +2,6 @@
 
 namespace Local\CouncilPayments\Model;
 
-use D3R\Db;
 use D3R\Model;
 use Local\CouncilPayments\Interfaces\Db\Filter;
 use Local\CouncilPayments\Model\Collection\PaymentCollection;
