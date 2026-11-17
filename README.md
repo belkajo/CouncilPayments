@@ -6,10 +6,13 @@ The listing should follow the supplied design and support searching and paginati
 
 ## Entry point
 
-Run the listing controller from the project's `index.php`. The controller supplies the placeholder data and loads the layout:
+Run the listing controller from the project's `index.php`. Inject the payments model and collection into the controller:
 
 ```php
-(new \Local\CouncilPayments\Controller\Listing())->render();
+(new \Local\CouncilPayments\Controller\Listing(
+    new \Local\CouncilPayments\Model\Payments(),
+    new \Local\CouncilPayments\Model\Collection\PaymentCollection()
+))->render($_GET);
 ```
 
 ## Tests

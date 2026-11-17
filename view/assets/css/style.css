@@ -147,7 +147,8 @@ tbody tr:nth-child(even) {
     margin: 18px 0 0;
 }
 
-.pagination span {
+.pagination span,
+.pagination a {
     display: inline-block;
     min-width: 26px;
     padding: 3px 7px;
@@ -157,6 +158,8 @@ tbody tr:nth-child(even) {
     font-size: 13px;
     font-weight: 700;
     text-align: center;
+    color: inherit;
+    text-decoration: none;
 }
 
 .pagination [aria-current] {
