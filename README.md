@@ -14,7 +14,19 @@ Run the listing controller from the project's `index.php`. The controller suppli
 
 ## Tests
 
-Run the tests from the project root (`devpracticaltest-2.0`):
+PHPUnit is a development dependency. From the project root (`devpracticaltest-2.0`), install the Composer dependencies, including development dependencies:
+
+```sh
+composer install
+```
+
+If the project's `composer.json` does not yet include PHPUnit, add it first:
+
+```sh
+composer require --dev phpunit/phpunit:^13.4
+```
+
+Then run the tests from the project root:
 
 ```sh
 vendor/bin/phpunit --bootstrap vendor/autoload.php src/Local/CouncilPayments/tests
