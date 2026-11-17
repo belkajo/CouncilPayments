@@ -4,6 +4,8 @@ This directory contains the application code for the D3R developer practical tes
 
 The listing should follow the supplied design and support searching and pagination. PHP classes in this directory use the `Local\CouncilPayments` namespace and are loaded through Composer's PSR-4 autoloader.
 
+Place this repository in the project's `src/Local/CouncilPayments` directory.
+
 ## Entry point
 
 Run the listing controller from the project's `index.php`. Inject the payments model and collection into the controller:
