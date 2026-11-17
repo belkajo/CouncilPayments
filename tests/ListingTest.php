@@ -13,8 +13,8 @@ final class ListingTest extends TestCase
         $collection = new PaymentCollection();
         $collection->add(new Payment(1, 'Supplier name', '499778', 3, '1620.00'));
         $model = $this->createMock(Payments::class);
-        $model->expects(self::once())->method('loadPage')
-            ->with($collection, 1, 5)->willReturn($collection);
+        $model->expects(self::once())->method('search')
+            ->with($collection, self::anything(), self::callback(fn ($pagination) => $pagination->getPage() === 1 && $pagination->getPerPage() === 5))->willReturn($collection);
 
         ob_start();
         try {
@@ -38,8 +38,8 @@ final class ListingTest extends TestCase
         foreach ([['2', 2], ['0', 1], ['invalid', 1], [[], 1]] as [$input, $expected]) {
             $collection = new PaymentCollection();
             $model = $this->createMock(Payments::class);
-            $model->expects(self::once())->method('loadPage')
-                ->with($collection, $expected, 5)->willReturn($collection);
+            $model->expects(self::once())->method('search')
+                ->with($collection, self::anything(), self::callback(fn ($pagination) => $pagination->getPage() === $expected && $pagination->getPerPage() === 5))->willReturn($collection);
 
             ob_start();
             try {
@@ -54,7 +54,7 @@ final class ListingTest extends TestCase
     {
         $collection = new PaymentCollection();
         $model = $this->createMock(Payments::class);
-        $model->method('loadPage')->willReturn($collection);
+        $model->method('search')->willReturn($collection);
         $model->expects(self::once())->method('totalRows')->willReturn(30);
 
         ob_start();
@@ -66,8 +66,8 @@ final class ListingTest extends TestCase
         }
 
         self::assertStringContainsString('<span aria-current="page">2</span>', $html);
-        self::assertStringContainsString('supplier=A+%26+B', $html);
-        self::assertStringContainsString('page=1', $html);
-        self::assertStringContainsString('page=3', $html);
+        self::assertStringContainsString('value="A &amp; B"', $html);
+        self::assertStringContainsString('type="hidden" name="page" value="2"', $html);
+        self::assertStringContainsString('form="payment-search" name="page" value="3"', $html);
     }
 }

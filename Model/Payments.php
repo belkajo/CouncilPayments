@@ -4,7 +4,9 @@ namespace Local\CouncilPayments\Model;
 
 use D3R\Db;
 use D3R\Model;
+use Local\CouncilPayments\Interfaces\Db\Filter;
 use Local\CouncilPayments\Model\Collection\PaymentCollection;
+use Local\CouncilPayments\Model\Db\Pagination;
 use Local\CouncilPayments\Interfaces\Payment as PaymentInterface;
 use RuntimeException;
 
@@ -12,22 +14,23 @@ class Payments extends Model
 {
     protected static $_tableName = 'payments';
     protected static $_itemName = 'payment';
+    private int $total = 0;
 
-    public static function loadPayment(int $id): ?PaymentInterface
+    public function search(PaymentCollection $collection, ?Filter $filter, ?Pagination $pagination): PaymentCollection
     {
-        $record = static::find($id);
-
-        return $record === false ? null : $record->toPayment();
-    }
-
-    public function loadPage(PaymentCollection $collection, int $page, int $perPage = 5): PaymentCollection
-    {
-        $records = static::findPage($page, $perPage, '1 ORDER BY payment_id');
-        if ($records === false) {
-            throw new RuntimeException('Unable to fetch payments');
+        $where = $filter?->getSql() ?: '1';
+        $params = $filter?->getParameters() ?? [];
+        $count = static::findBySql('SELECT COUNT(*) AS payment_id, COUNT(*) AS payment_total FROM ' . static::tableName() . ' WHERE ' . $where, $params);
+        if ($count === false || !isset($count[0])) {
+            throw new RuntimeException('Unable to count payments');
         }
+        $this->total = (int) $count[0]->field('total');
 
-        foreach ($records as $record) {
+        $records = static::findBySql(
+            'SELECT * FROM ' . static::tableName() . ' WHERE ' . $where . ' ORDER BY payment_id' . ($pagination ? ' ' . $pagination->getSql() : ''),
+            $params
+        );
+        foreach ($records ?: [] as $record) {
             $collection->add($record->toPayment());
         }
 
@@ -36,7 +39,7 @@ class Payments extends Model
 
     public function totalRows(): int
     {
-        return (int) Db::get()->numRows();
+        return $this->total;
     }
 
     public function toPayment(): PaymentInterface
@@ -48,34 +51,5 @@ class Payments extends Model
             (int) $this->field('cost_rating'),
             (string) $this->field('amount')
         );
-    }
-
-    public function store(PaymentInterface $payment): void
-    {
-        $this->_id = false;
-        $this->setFromArray([
-            'payment_supplier' => $payment->getPaymentSupplier(),
-            'payment_ref' => $payment->getPaymentRef(),
-            'payment_cost_rating' => $payment->getPaymentCostRating(),
-            'payment_amount' => $payment->getPaymentAmount(),
-        ]);
-
-        if ($payment->getPaymentId() !== 0) {
-            $this->setId($payment->getPaymentId());
-        }
-
-        $this->save();
-        $payment->setPaymentId((int) $this->_id);
-    }
-
-    public function delete(PaymentInterface $payment): void
-    {
-        if ($payment->getPaymentId() <= 0) {
-            throw new RuntimeException('Cannot delete a payment without an ID');
-        }
-
-        if (Db::get()->delete(static::tableName(), 'payment_id = :id', ['id' => $payment->getPaymentId()]) === false) {
-            throw new RuntimeException('Unable to delete payment');
-        }
     }
 }

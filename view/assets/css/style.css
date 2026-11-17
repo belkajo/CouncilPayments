@@ -70,7 +70,8 @@ select {
     width: 160px;
 }
 
-button {
+button,
+.reset {
     border: 0;
     border-radius: 4px;
     padding: 6px 20px;
@@ -79,6 +80,10 @@ button {
     color: #444;
     background: linear-gradient(#eee, #bdbdbd);
     cursor: pointer;
+}
+
+.reset {
+    text-decoration: none;
 }
 
 button[type=submit] {
@@ -148,7 +153,7 @@ tbody tr:nth-child(even) {
 }
 
 .pagination span,
-.pagination a {
+.pagination button[type=submit] {
     display: inline-block;
     min-width: 26px;
     padding: 3px 7px;
