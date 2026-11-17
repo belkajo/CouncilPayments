@@ -35,7 +35,9 @@
             <button type="submit" form="payment-search" name="page" value="<?= min($page - 1, $totalPages) ?>" aria-label="Previous page">‹</button>
         <?php endif; ?>
         <?php $windowPage = min($page, $totalPages); ?>
-        <?php for ($number = max(1, min($windowPage - 2, $totalPages - 4)); $number <= min($totalPages, max(5, $windowPage + 2)); $number++): ?>
+        <?php $startPage = max(1, min($windowPage - 2, $totalPages - 4)); ?>
+        <?php $endPage = min($totalPages, max(5, $windowPage + 2)); ?>
+        <?php for ($number = $startPage; $number <= $endPage; $number++): ?>
             <?php if ($number === $page): ?>
                 <span aria-current="page"><?= $number ?></span>
             <?php else: ?>
