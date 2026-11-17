@@ -1,0 +1,180 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 76px 20px;
+    background: #e8e8e8 url('../images/tile.png') repeat;
+    color: #555;
+    font: 16px 'Source Sans 3', sans-serif;
+}
+
+.page {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fafafa;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 1px 4px #aaa, 0 0 0 7px rgb(0 0 0 / 4%);
+}
+
+.page-header {
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 24px;
+}
+
+h1 {
+    color: #258bc1;
+    font-size: clamp(38px, 6vw, 58px);
+    font-weight: 300;
+    line-height: 1.1;
+    margin: 0 0 8px;
+}
+
+.page-header p {
+    margin: 0;
+    color: #383838;
+    font-size: 17px;
+}
+
+.search {
+    display: flex;
+    justify-content: center;
+    gap: 9px;
+    margin: 17px 0;
+    flex-wrap: wrap;
+}
+
+input, select, button {
+    font: inherit;
+}
+
+input, select {
+    height: 31px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    color: #555;
+    padding: 4px 9px;
+}
+
+input {
+    width: 370px;
+    max-width: 100%;
+}
+
+select {
+    width: 160px;
+}
+
+button {
+    border: 0;
+    border-radius: 4px;
+    padding: 6px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #444;
+    background: linear-gradient(#eee, #bdbdbd);
+    cursor: pointer;
+}
+
+button[type=submit] {
+    color: white;
+    background: linear-gradient(#68a1f7, #1269ed);
+}
+
+.table-wrap {
+    overflow-x: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px #ddd;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 650px;
+    font-size: 13px;
+}
+
+th {
+    background: #e7e8e9;
+    text-align: left;
+    font-weight: 700;
+    height: 59px;
+}
+
+th, td {
+    padding: 12px 28px;
+}
+
+th:not(:first-child), td:not(:first-child) {
+    text-align: center;
+}
+
+td {
+    height: 50px;
+    border-top: 1px solid #ddd;
+}
+
+td + td {
+    border-left: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+    background: #f3f3f3;
+}
+
+.rating {
+    white-space: nowrap;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.rating img {
+    width: 26px;
+    height: 26px;
+    vertical-align: middle;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin: 18px 0 0;
+}
+
+.pagination span {
+    display: inline-block;
+    min-width: 26px;
+    padding: 3px 7px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: linear-gradient(#fff, #e7e7e7);
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.pagination [aria-current] {
+    background: #666;
+    color: white;
+    border-color: #555;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 24px 12px;
+    }
+
+    .page {
+        padding: 16px;
+    }
+
+    .search input {
+        width: 100%;
+    }
+}
