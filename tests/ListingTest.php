@@ -38,6 +38,7 @@ final class ListingTest extends TestCase
         foreach ([['2', 2], ['0', 1], ['invalid', 1], [[], 1]] as [$input, $expected]) {
             $collection = new PaymentCollection();
             $model = $this->createMock(Payments::class);
+            $model->method('totalRows')->willReturn(30);
             $model->expects(self::once())->method('search')
                 ->with($collection, self::anything(), self::callback(fn ($pagination) => $pagination->getPage() === $expected && $pagination->getPerPage() === 5))->willReturn($collection);
 
@@ -48,6 +49,32 @@ final class ListingTest extends TestCase
                 ob_end_clean();
             }
         }
+    }
+
+    public function testOutOfRangePageLoadsLastPage(): void
+    {
+        $collection = new PaymentCollection();
+        $model = $this->createMock(Payments::class);
+        $model->method('totalRows')->willReturn(12);
+        $pages = [];
+        $model->expects(self::exactly(2))->method('search')->willReturnCallback(
+            function ($items, $filter, $pagination) use (&$pages) {
+                $pages[] = $pagination->getPage();
+                return $items;
+            }
+        );
+
+        ob_start();
+        try {
+            (new Listing($model, $collection))->render(['page' => '99']);
+            $html = ob_get_contents();
+        } finally {
+            ob_end_clean();
+        }
+
+        self::assertSame([99, 3], $pages);
+        self::assertStringContainsString('type="hidden" name="page" value="3"', $html);
+        self::assertStringContainsString('<span aria-current="page">3</span>', $html);
     }
 
     public function testPaginationDisplaysCurrentPageAndLinks(): void

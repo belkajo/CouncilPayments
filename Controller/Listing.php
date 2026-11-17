@@ -21,7 +21,7 @@ class Listing
         $page = filter_var($query['page'] ?? null, FILTER_VALIDATE_INT, [
             'options' => ['min_range' => 1],
         ]);
-        $page = $page === false ? 1 : $page;
+        $page = $page === false ? 1 : min($page, intdiv(PHP_INT_MAX, 5));
         $pagination = new Pagination($page, 5);
         $filter = new Filter();
 
@@ -46,6 +46,12 @@ class Listing
         }
         $payments = $this->paymentsModel->search($this->collection, $filter, $pagination);
         $totalPages = (int) ceil($this->paymentsModel->totalRows() / $pagination->getPerPage());
+
+        if ($page > max(1, $totalPages)) {
+            $page = max(1, $totalPages);
+            $pagination = new Pagination($page, $pagination->getPerPage());
+            $payments = $this->paymentsModel->search(new PaymentCollection(), $filter, $pagination);
+        }
 
         require __DIR__ . '/../view/templates/layout.phtml';
     }
