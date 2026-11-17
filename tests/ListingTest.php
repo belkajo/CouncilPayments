@@ -73,7 +73,6 @@ final class ListingTest extends TestCase
         }
 
         self::assertSame([99, 3], $pages);
-        self::assertStringContainsString('type="hidden" name="page" value="3"', $html);
         self::assertStringContainsString('<span aria-current="page">3</span>', $html);
     }
 
@@ -94,7 +93,7 @@ final class ListingTest extends TestCase
 
         self::assertStringContainsString('<span aria-current="page">2</span>', $html);
         self::assertStringContainsString('value="A &amp; B"', $html);
-        self::assertStringContainsString('type="hidden" name="page" value="2"', $html);
+        self::assertStringNotContainsString('type="hidden" name="page"', $html);
         self::assertStringContainsString('form="payment-search" name="page" value="3"', $html);
     }
 }
